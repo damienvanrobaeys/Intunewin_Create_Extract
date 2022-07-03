@@ -3,7 +3,7 @@ xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"		
 xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks" 				
-Title="Win32App - Build and Extract - v1.0" 		
+Title="Win32App - Build and Extract - v1.1" 		
 Name="MainPanel" 
 Height="320" 
 Width="600" 
@@ -67,8 +67,8 @@ GlowBrush="{DynamicResource AccentColorBrush}"
 										   <GroupBox Header="Package Sources" Height="67" Margin="0,5,0,0" Width="390">
 												<StackPanel>
 													<StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,1,0,0">
-														<Button x:Name="browse_package_folder" Content="Browse" Margin="0,0,0,0" Width="70" Height="19"/>			
-														<TextBox x:Name="browse_package_folder_textbox" Margin="5,0,0,0" Width="300" Height="19"></TextBox>						
+														<Button Name="browse_package_folder" Content="Browse" Margin="0,0,0,0" Width="70" Height="19"/>			
+														<TextBox Name="browse_package_folder_textbox" Margin="5,0,0,0" Width="300" Height="19"></TextBox>						
 													</StackPanel>							
 												</StackPanel>             
 											</GroupBox>
@@ -78,12 +78,12 @@ GlowBrush="{DynamicResource AccentColorBrush}"
 													
 													<StackPanel Orientation="Horizontal" Margin="0,0,0,0">
 														<Label Content="File to run" Margin="4,0,0,0" Width="70"></Label>
-														<ComboBox x:Name="file_to_run" SelectedIndex="0" Text="Choose" Height="25" Width="300" Margin="0,0,0,0"/>			
+														<ComboBox Name="file_to_run" SelectedIndex="0" Text="Choose" Height="25" Width="300" Margin="0,0,0,0"/>			
 													</StackPanel>	
 													
 													<StackPanel Orientation="Horizontal" Margin="0,3,0,0">
 														<Label Content="File name" Margin="4,0,0,0" Width="70"></Label>
-														<TextBox x:Name="package_name" Margin="0,0,0,0" Width="300" Height="19"
+														<TextBox Name="package_name" Margin="0,0,0,0" Width="300" Height="19"
 															Controls:TextBoxHelper.ClearTextButton="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:TextBoxHelper.HasText), Mode=OneWay}" 
 															Controls:TextBoxHelper.IsWaitingForData="True" 
 															Controls:TextBoxHelper.Watermark="You can change the intunewin name here (optional)" 														
@@ -95,8 +95,8 @@ GlowBrush="{DynamicResource AccentColorBrush}"
 											<GroupBox Header="Location of the Intunewin" Height="67" Margin="0,5,0,0" Width="390">
 												<StackPanel>
 													<StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,1,0,0">
-														<Button x:Name="browse_output" Content="Browse" Margin="0,0,0,0" Width="70" Height="19"/>			
-														<TextBox x:Name="browse_output_txtbox" Margin="5,0,0,0" Width="300" Height="19"></TextBox>						
+														<Button Name="browse_output" Content="Browse" Margin="0,0,0,0" Width="70" Height="19"/>			
+														<TextBox Name="browse_output_txtbox" Margin="5,0,0,0" Width="300" Height="19"></TextBox>						
 													</StackPanel>							
 												</StackPanel>   										
 											</GroupBox>			
@@ -132,8 +132,8 @@ GlowBrush="{DynamicResource AccentColorBrush}"
 									   <GroupBox Header="Select your intunewin" Height="67" Margin="0,5,0,0" Width="390">
 											<StackPanel>
 												<StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,1,0,0">
-													<Button x:Name="browse_intunewin" Content="Browse" Margin="0,0,0,0" Width="70" Height="19"/>			
-													<TextBox x:Name="intunewin_sources_textbox" Margin="5,0,0,0" Width="300" Height="19"></TextBox>						
+													<Button Name="browse_intunewin" Content="Browse" Margin="0,0,0,0" Width="70" Height="19"/>			
+													<TextBox Name="intunewin_sources_textbox" Margin="5,0,0,0" Width="300" Height="19"></TextBox>						
 												</StackPanel>							
 											</StackPanel>             
 										</GroupBox>
@@ -142,8 +142,8 @@ GlowBrush="{DynamicResource AccentColorBrush}"
 										<GroupBox Header="Intunewin extract folder" Height="67" Margin="0,5,0,0" Width="390">
 											<StackPanel>
 												<StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,1,0,0">
-													<Button x:Name="browse_output_intunewin" Content="Browse" Margin="0,0,0,0" Width="70" Height="19"/>			
-													<TextBox x:Name="browse_output_txtbox_inunewin" Margin="5,0,0,0" Width="300" Height="19"></TextBox>						
+													<Button Name="browse_output_intunewin" Content="Browse" Margin="0,0,0,0" Width="70" Height="19"/>			
+													<TextBox Name="browse_output_txtbox_inunewin" Margin="5,0,0,0" Width="300" Height="19"></TextBox>						
 												</StackPanel>							
 											</StackPanel>   										
 										</GroupBox>			
@@ -180,11 +180,13 @@ GlowBrush="{DynamicResource AccentColorBrush}"
 						 </TabItem.HeaderTemplate>
 
 						<StackPanel HorizontalAlignment="Center"  Margin="0,20,0,0" Orientation="Vertical" >							
-							<Image Name = "Tool_Logo"  Margin="0,0,0,0" Height="150" Source="logo.png" HorizontalAlignment="Center"></Image>
-							<StackPanel Margin="0,20,0,0">							
-								<Label HorizontalAlignment="Center" FontSize="14" Content="Win32App - Build and Extract - v1.0"/>
+							<Image Name = "Tool_Logo"  Margin="0,0,0,0" Height="130" Source="logo.png" HorizontalAlignment="Center"></Image>
+							<StackPanel Margin="0,10,0,0">							
+								<Label HorizontalAlignment="Center" FontSize="14" Content="Win32App - Build and Extract - v1.1"/>
 								<Label HorizontalAlignment="Center" FontSize="14" Content="Author: Syst and Deploy"/>
-								<Label HorizontalAlignment="Center" FontSize="14" Content="Web site: http://systanddeploy.com/"/>
+								<Label HorizontalAlignment="Center" FontSize="14" Content="Web site: systanddeploy.com"/>
+								
+								<Label HorizontalAlignment="Center" FontSize="14" Name="IntuneWinApp_Ver" Margin="0,3,0,0"/>								
 							</StackPanel>							
 						</StackPanel>	
 
