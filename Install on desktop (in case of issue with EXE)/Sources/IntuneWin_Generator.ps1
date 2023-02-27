@@ -125,32 +125,16 @@ $browse_output_txtbox_inunewin.IsEnabled = $False
 
 $object = New-Object -comObject Shell.Application  
 
-Launch_modal_progress
+# Launch_modal_progress
 
-$IntuneWinAppUtil_Link =  "https://github.com/microsoft/Microsoft-Win32-Content-Prep-Tool/raw/master/IntuneWinAppUtil.exe"
-
-$Last_Version_Length = (Invoke-WebRequest -method "Head" $IntuneWinAppUtil_Link -UseBasicParsing | Select Headers -ExpandProperty Headers)."Content-Length"
-$Current_Version_Length = (get-item "$Current_Folder\IntuneWinAppUtil.exe").length
-
-
-
-If($Current_Version_Length -ne $Last_Version_Length)
-	{
-		$IntuneWinAppUtil_File = "$env:temp\IntuneWinAppUtil.exe"
-		Invoke-WebRequest -Uri $IntuneWinAppUtil_Link -OutFile $IntuneWinAppUtil_File -UseBasicParsing | out-null	
-	}
-Else
-	{
-		$IntuneWinAppUtil_File = "$Current_Folder\IntuneWinAppUtil.exe"
-	}
-
-$IntuneWinAppUtilDecoder = "$Current_Folder\IntuneWinAppUtilDecoder.exe"
+$IntuneWin_Folder = "$env:LOCALAPPDATA\Intunewin_Build_Extract"
+$IntuneWinAppUtil_File = "$IntuneWin_Folder\IntuneWinAppUtil.exe"
+$IntuneWinAppUtilDecoder = "$IntuneWin_Folder\IntuneWinAppUtilDecoder.exe"
 $IntuneWin_Ver = "IntuneWinAppUtil: " + [System.Diagnostics.FileVersionInfo]::GetVersionInfo("$IntuneWinAppUtil_File").FileVersion
 $IntuneWinDecoder_Ver = "Decoder: " + [System.Diagnostics.FileVersionInfo]::GetVersionInfo("$IntuneWinAppUtilDecoder").FileVersion
-
 $IntuneWinApp_Ver.Content = $IntuneWin_Ver + " / " + $IntuneWinDecoder_Ver
 
-Close_modal_progress
+# Close_modal_progress
 
 #===========================================================================
 # Declare the change_theme button and action on this button
@@ -199,9 +183,6 @@ $browse_package_folder.Add_Click({
 		}
 })	
 
-
-
-
 $browse_output.Add_Click({		
 	$output_folder = $object.BrowseForFolder(0, $message, 0, 0) 
 	If ($output_folder -ne $null) 
@@ -212,7 +193,6 @@ $browse_output.Add_Click({
 			$Script:Folder_name = Split-Path -leaf -path $Package_output_folder			
 		}
 })	
-
 
 $browse_intunewin.Add_Click({
 	$File_Dialog = New-Object System.Windows.Forms.OpenFileDialog
@@ -252,19 +232,35 @@ $build.add_Click({
 $extract.add_Click({
 	& .\IntuneWinAppUtilDecoder.exe $Intunewin_Full_path -s	
 	$Intunewin_Extract_Directory = (get-item $Intunewin_Full_path).Directory	
-	$IntuneWin_File_Name = (get-item $Intunewin_Full_path).Name		
-	$IntuneWinDecoded_File_Name = "$Intunewin_Extract_Directory\$IntuneWin_File_Name.decoded"	
+	$IntuneWin_File_Name = (get-item $Intunewin_Full_path).BaseName		
+	$IntuneWinDecoded_File = "$Intunewin_Extract_Directory\$IntuneWin_File_Name.decoded.zip"	
+
+	Expand-Archive -LiteralPath $IntuneWinDecoded_File -DestinationPath $Extract_File_path -Force
 	
-	$IntuneWin_Rename = "$IntuneWin_File_Name.zip"
-	Rename-Item $IntuneWinDecoded_File_Name $IntuneWin_Rename -force
-	
-	Expand-Archive -LiteralPath "$Intunewin_Extract_Directory\$IntuneWin_Rename" -DestinationPath $Extract_File_path -Force
-	
-	Remove-Item "$Intunewin_Extract_Directory\$IntuneWin_Rename" -force
+	Remove-Item $IntuneWinDecoded_File
 	invoke-item $Extract_File_path
 	
 	[MahApps.Metro.Controls.Dialogs.DialogManager]::ShowModalMessageExternal($Form,"Intunewin extraction","Your intunewin package has been correctly extracted")
 
+})
+
+$Download.Add_Click({
+	$IntuneWinAppUtil_Link =  "https://github.com/microsoft/Microsoft-Win32-Content-Prep-Tool/raw/master/IntuneWinAppUtil.exe"
+	$IntuneWinAppUtil_File = "$IntuneWin_Folder\IntuneWinAppUtil.exe"
+	Invoke-WebRequest -Uri $IntuneWinAppUtil_Link -OutFile $IntuneWinAppUtil_File -UseBasicParsing | out-null
+	
+	$Decode_Link = "https://github.com/okieselbach/Intune/raw/master/IntuneWinAppUtilDecoder/IntuneWinAppUtilDecoder/bin/Release/IntuneWinAppUtilDecoder.exe"
+	$DecodeApp_File = "$IntuneWin_Folder\IntuneWinAppUtilDecoder.exe"
+	Invoke-WebRequest -Uri $Decode_Link -OutFile $DecodeApp_File -UseBasicParsing | out-null
+	
+	Get-Childitem $IntuneWin_Folder -Recurse | Unblock-File
+
+	$IntuneWin_Folder = "$env:LOCALAPPDATA\Intunewin_Build_Extract"
+	$IntuneWinAppUtil_File = "$IntuneWin_Folder\IntuneWinAppUtil.exe"
+	$IntuneWinAppUtilDecoder = "$IntuneWin_Folder\IntuneWinAppUtilDecoder.exe"
+	$IntuneWin_Ver = "IntuneWinAppUtil: " + [System.Diagnostics.FileVersionInfo]::GetVersionInfo("$IntuneWinAppUtil_File").FileVersion
+	$IntuneWinDecoder_Ver = "Decoder: " + [System.Diagnostics.FileVersionInfo]::GetVersionInfo("$IntuneWinAppUtilDecoder").FileVersion
+	$IntuneWinApp_Ver.Content = $IntuneWin_Ver + " / " + $IntuneWinDecoder_Ver	
 })
 
 $Form.ShowDialog() | Out-Null
