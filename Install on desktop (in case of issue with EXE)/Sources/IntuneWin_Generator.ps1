@@ -157,6 +157,11 @@ $Change_Theme.Add_Click({
 #===========================================================================
 
 
+$browse_output_intunewin.AllowDrop = $True
+$browse_intunewin.AllowDrop = $True
+$intunewin_sources_textbox.AllowDrop = $True
+
+
 $browse_package_folder.Add_Click({		
 	$folder = $object.BrowseForFolder(0, $message, 0, 0) 
 	If ($folder -ne $null) 
@@ -183,6 +188,62 @@ $browse_package_folder.Add_Click({
 		}
 })	
 
+$browse_package_folder.AllowDrop = $True
+$browse_output.AllowDrop = $True
+
+
+$browse_package_folder.Add_Drop({
+    [System.Object]$script:sender = $args[0]
+    [System.Windows.DragEventArgs]$e = $args[1]
+
+    If($e.Data.GetDataPresent([System.Windows.DataFormats]::FileDrop)){
+
+        $Script:Files =  $e.Data.GetData([System.Windows.DataFormats]::FileDrop)
+        Foreach($file in $Files){
+            $userControl = NewUserControl -Path $file
+            $WrapPanel.Children.Add($userControl) | Out-Null
+        }
+    }	
+	
+    If((Get-Item $file) -is [System.IO.DirectoryInfo])
+		{
+			$browse_package_folder_textbox.Text = $file	
+			$Script:Sources_Folder = $file	
+
+			$Dir_Sources_Folder = get-childitem $Sources_Folder -recurse
+			$List_All_Files = $Dir_Sources_Folder | where { ! $_.PSIsContainer }			
+			foreach ($File in $List_All_Files)
+				{
+					$file_to_run.Items.Add($File)	
+					$Script:Intunewin_File_To_Run = $file_to_run.SelectedItem	
+					$Script:File_Full_Path = $File.FullName					
+				}	
+			$Global:File_Path = "$Sources_Folder\$Intunewin_File_To_Run"
+				
+			$file_to_run.add_SelectionChanged({
+				$Script:Intunewin_File_To_Run = $file_to_run.SelectedItem
+				$Global:File_Path = "$Sources_Folder\$Intunewin_File_To_Run"
+			})				
+		}
+    Else
+		{
+			[MahApps.Metro.Controls.Dialogs.DialogManager]::ShowModalMessageExternal($Form,"Browser Intunewin","Please select a folder")
+		}	
+
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
 $browse_output.Add_Click({		
 	$output_folder = $object.BrowseForFolder(0, $message, 0, 0) 
 	If ($output_folder -ne $null) 
@@ -194,6 +255,144 @@ $browse_output.Add_Click({
 		}
 })	
 
+
+
+$browse_output.Add_Drop({
+    [System.Object]$script:sender = $args[0]
+    [System.Windows.DragEventArgs]$e = $args[1]
+
+    If($e.Data.GetDataPresent([System.Windows.DataFormats]::FileDrop)){
+
+        $Script:Files =  $e.Data.GetData([System.Windows.DataFormats]::FileDrop)
+        Foreach($file in $Files){
+            $userControl = NewUserControl -Path $file
+            $WrapPanel.Children.Add($userControl) | Out-Null
+        }
+    }	
+	
+    If((Get-Item $file) -is [System.IO.DirectoryInfo])
+		{
+			$browse_output_txtbox.Text = $file	
+			$Script:Package_output_folder = $file	
+		}
+    Else
+		{
+			[MahApps.Metro.Controls.Dialogs.DialogManager]::ShowModalMessageExternal($Form,"Browser Intunewin","Please select a folder")
+		}	
+
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+$intunewin_sources_textbox.Add_Drop({
+    [System.Object]$script:sender = $args[0]
+    [System.Windows.DragEventArgs]$e = $args[1]
+
+    If($e.Data.GetDataPresent([System.Windows.DataFormats]::FileDrop)){
+
+        $Script:Files =  $e.Data.GetData([System.Windows.DataFormats]::FileDrop)
+        Foreach($file in $Files){
+            $userControl = NewUserControl -Path $file
+            $WrapPanel.Children.Add($userControl) | Out-Null
+        }
+    }	
+	
+	If($file -notlike "*.intunewin")
+		{
+			[MahApps.Metro.Controls.Dialogs.DialogManager]::ShowModalMessageExternal($Form,"Browser Intunewin","Please select an intunewin file")
+	
+		}
+	Else
+		{
+			$intunewin_sources_textbox.Text = $file		
+			$Script:Intunewin_Full_path = $file
+		}
+})
+
+
+$browse_intunewin.Add_Drop({
+    [System.Object]$script:sender = $args[0]
+    [System.Windows.DragEventArgs]$e = $args[1]
+
+    If($e.Data.GetDataPresent([System.Windows.DataFormats]::FileDrop)){
+
+        $Script:Files =  $e.Data.GetData([System.Windows.DataFormats]::FileDrop)
+        Foreach($file in $Files){
+            $userControl = NewUserControl -Path $file
+            $WrapPanel.Children.Add($userControl) | Out-Null
+        }
+    }	
+	
+	If($file -notlike "*.intunewin")
+		{
+			[MahApps.Metro.Controls.Dialogs.DialogManager]::ShowModalMessageExternal($Form,"Browser Intunewin","Please select an intunewin file")
+	
+		}
+	Else
+		{
+			$intunewin_sources_textbox.Text = $file	
+			$Script:Intunewin_Full_path = $file			
+		}
+})
+
+
+
+$browse_output_intunewin.Add_Drop({
+    [System.Object]$script:sender = $args[0]
+    [System.Windows.DragEventArgs]$e = $args[1]
+
+    If($e.Data.GetDataPresent([System.Windows.DataFormats]::FileDrop)){
+
+        $Script:Files =  $e.Data.GetData([System.Windows.DataFormats]::FileDrop)
+        Foreach($file in $Files){
+            $userControl = NewUserControl -Path $file
+            $WrapPanel.Children.Add($userControl) | Out-Null
+        }
+    }	
+	
+    If((Get-Item $file) -is [System.IO.DirectoryInfo])
+		{
+			$browse_output_txtbox_inunewin.Text = $file	
+			$Script:Extract_File_path = $file	
+		}
+    Else
+		{
+			[MahApps.Metro.Controls.Dialogs.DialogManager]::ShowModalMessageExternal($Form,"Browser Intunewin","Please select a folder")
+		}	
+
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 $browse_intunewin.Add_Click({
 	$File_Dialog = New-Object System.Windows.Forms.OpenFileDialog
 	$File_Dialog.Filter = "Intunewin File (.intunewin)|*.intunewin"
@@ -203,7 +402,7 @@ $browse_intunewin.Add_Click({
 	$File_Dialog.ShowDialog() | Out-Null
 		
 	$Script:Intunewin_Full_path = $File_Dialog.filename	
-	$intunewin_sources_textbox.Text = $Intunewin_Full_path
+	$intunewin_sources_textbox.Text = $Intunewin_Full_path	
 })
 
 $browse_output_intunewin.Add_Click({
@@ -213,6 +412,10 @@ $browse_output_intunewin.Add_Click({
 	$Script:Extract_File_path = $Folder_Object.SelectedPath	
 	$browse_output_txtbox_inunewin.Text = $Extract_File_path	
 })
+
+
+
+
 
 
 $build.add_Click({
