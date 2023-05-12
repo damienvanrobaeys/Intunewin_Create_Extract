@@ -1,1 +1,1 @@
-# Intune Win32app tool - Create and Extract Intunewin
+# Intune Win32app tool - Build and Extract Intunewin
